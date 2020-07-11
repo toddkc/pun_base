@@ -7,21 +7,19 @@ using UnityEngine.UI;
 
 public class ChatManager : MonoBehaviour, IChatClientListener
 {
-    [Header("UI References")]
     [SerializeField] InputField chatMessageInput = default;
     [SerializeField] Text messageDisplayText = default;
-
-    [Header("Settings")]
-    [SerializeField] private float chatUpdateDelay = 1.0f;
+    [SerializeField] GameObject chatPanel = default;
+    [SerializeField] KeyCode onkey = default;
+    [SerializeField] KeyCode offkey = default;
 
     private ChatClient client;
-    private bool chatActive = false;
-    private WaitForSeconds delay;
+    private bool chatActive = true;
     private ChatAppSettings appSettings;
 
     private void Start()
     {
-        delay = new WaitForSeconds(chatUpdateDelay);
+        chatPanel.SetActive(true);
         appSettings = PhotonNetwork.PhotonServerSettings.AppSettings.GetChatSettings();
         AuthenticationValues authvals = new AuthenticationValues();
         authvals.UserId = PhotonNetwork.NickName;
@@ -29,10 +27,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         client = new ChatClient(this);
         client.AuthValues = authvals;
         client.ChatRegion = "US";
-        if (string.IsNullOrEmpty(appSettings.AppId))
-        {
-            Debug.Log("no app id set for chat");
-        }
         client.UseBackgroundWorkerForSending = true;
         Debug.Log("connecting to chat as: " + client.AuthValues.UserId);
         client.ConnectUsingSettings(appSettings);
@@ -43,10 +37,11 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         string message = chatMessageInput.text;
         if (string.IsNullOrEmpty(message)) return;
         chatMessageInput.text = "";
+        chatMessageInput.ActivateInputField();
         client.PublishMessage(PhotonNetwork.CurrentRoom.Name, message);
     }
 
-    public void UpdateMessages(string channelName)
+    private void UpdateMessages(string channelName)
     {
         ChatChannel channel = null;
         bool found = client.TryGetChannel(channelName, out channel);
@@ -61,28 +56,25 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     private void Update()
     {
-        client.Service();
-    }
+        if (Input.GetKeyDown(onkey) && !chatActive)
+        {
+            chatPanel.SetActive(true);
+            chatActive = true;
+        }
 
-    public void ToggleChat()
-    {
+        if (Input.GetKeyDown(offkey) && chatActive)
+        {
+            chatPanel.SetActive(false);
+            chatActive = false;
+        }
+
         if (chatActive)
         {
-            StopAllCoroutines();
-        }
-        else
-        {
-            StartCoroutine(UpdateChat());
-        }
-        chatActive = !chatActive;
-    }
-
-    private IEnumerator UpdateChat()
-    {
-        yield return delay;
-        if (client != null)
-        {
             client.Service();
+            if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter))
+            {
+                SendChatMessage();
+            }
         }
     }
 
