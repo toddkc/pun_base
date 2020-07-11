@@ -2703,6 +2703,41 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 7936832375389330693, guid: e823d0fa5d7574c4ab27665cf30cfac6,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7936832375389330693, guid: e823d0fa5d7574c4ab27665cf30cfac6,
+        type: 3}
+      propertyPath: m_Pitch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7936832375389330693, guid: e823d0fa5d7574c4ab27665cf30cfac6,
+        type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7936832375389330693, guid: e823d0fa5d7574c4ab27665cf30cfac6,
+        type: 3}
+      propertyPath: DopplerLevel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7936832375389330693, guid: e823d0fa5d7574c4ab27665cf30cfac6,
+        type: 3}
+      propertyPath: rolloffMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7936832375389330693, guid: e823d0fa5d7574c4ab27665cf30cfac6,
+        type: 3}
+      propertyPath: MaxDistance
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 7936832375389330693, guid: e823d0fa5d7574c4ab27665cf30cfac6,
+        type: 3}
+      propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e823d0fa5d7574c4ab27665cf30cfac6, type: 3}
 --- !u!1001 &4153463498603345691

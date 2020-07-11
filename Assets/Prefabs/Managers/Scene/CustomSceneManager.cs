@@ -1,18 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Photon.Pun;
 using UnityEngine;
 
-public class CustomSceneManager : MonoBehaviour
+public class CustomSceneManager : MonoBehaviourPunCallbacks
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] GameObject playerEntity = default;
 
-    // Update is called once per frame
-    void Update()
+    // need to disconnect from chat and voice when leaving?
+
+    private void Start()
     {
-        
+        if (!PhotonNetwork.IsConnected)
+        {
+            Debug.LogError("player is not connected to PUN");
+            return;
+        }
+
+        // instantiate player
+        var entity = PhotonNetwork.Instantiate(playerEntity.name, Vector3.zero, Quaternion.identity);
+        entity.name = PhotonNetwork.NickName;
     }
 }
