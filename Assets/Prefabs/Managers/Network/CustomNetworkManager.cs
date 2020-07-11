@@ -73,6 +73,12 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.Disconnect();
     }
 
+    public void SpawnPlayer(Player player)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        var entity = PhotonNetwork.Instantiate(playerEntityPrefab.name, Vector3.zero, Quaternion.identity);
+    }
 
     #region Callbacks
 
@@ -87,12 +93,16 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
         Debug.Log("left room");
         AudioPlayer.PlayerLeft();
         leaveRoomEvent.Raise();
+
+        // TODO handle destroying of player
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         Debug.Log(otherPlayer.NickName + " has left the room");
         AudioPlayer.PlayerLeft();
+
+        // TODO handle destroying of other players?
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -111,12 +121,18 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
         Debug.Log("joined room: " + PhotonNetwork.CurrentRoom.Name);
         AudioPlayer.PlayerJoined();
         joinRoomEvent.Raise();
+
+        // TODO handle instantiate player
+        SpawnPlayer(PhotonNetwork.LocalPlayer);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Debug.Log(newPlayer.NickName + "has joined the room");
         AudioPlayer.PlayerJoined();
+
+        // TODO handle instantiate other player
+        SpawnPlayer(newPlayer);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)

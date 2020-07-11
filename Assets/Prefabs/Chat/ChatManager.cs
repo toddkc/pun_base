@@ -21,8 +21,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     private void Start()
     {
-        chatActive = false;
-        inRoom = false;
         chatPanel.SetActive(false);
     }
 
