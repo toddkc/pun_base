@@ -75,9 +75,9 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
 
     public void SpawnPlayer(Player player)
     {
-        if (!PhotonNetwork.IsMasterClient) return;
-
+        //if (!PhotonNetwork.IsMasterClient) return;
         var entity = PhotonNetwork.Instantiate(playerEntityPrefab.name, Vector3.zero, Quaternion.identity);
+        //entity.GetPhotonView().TransferOwnership(player);
     }
 
     #region Callbacks
@@ -132,7 +132,7 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
         AudioPlayer.PlayerJoined();
 
         // TODO handle instantiate other player
-        SpawnPlayer(newPlayer);
+        //SpawnPlayer(newPlayer);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
