@@ -15,8 +15,11 @@ public class CustomSceneManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        // instantiate player
-        var entity = PhotonNetwork.Instantiate(playerEntity.name, Vector3.zero, Quaternion.identity);
-        entity.name = PhotonNetwork.NickName;
+        if (photonView.IsMine)
+        {
+            // instantiate player
+            var entity = PhotonNetwork.Instantiate(playerEntity.name, Vector3.zero, Quaternion.identity);
+            entity.name = "LocalPlayer_" + PhotonNetwork.NickName;
+        }
     }
 }
