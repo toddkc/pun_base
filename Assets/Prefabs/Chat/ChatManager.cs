@@ -14,12 +14,21 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     [SerializeField] KeyCode offkey = default;
 
     private ChatClient client;
-    private bool chatActive = true;
+    private string[] channelRoomNames = new string[1];
+    private bool chatActive = false;
+    private bool inRoom = false;
     private ChatAppSettings appSettings;
 
     private void Start()
     {
-        chatPanel.SetActive(true);
+        chatActive = false;
+        inRoom = false;
+        chatPanel.SetActive(false);
+    }
+
+    public void EnableChat()
+    {
+        channelRoomNames[0] = PhotonNetwork.CurrentRoom.Name;
         appSettings = PhotonNetwork.PhotonServerSettings.AppSettings.GetChatSettings();
         AuthenticationValues authvals = new AuthenticationValues();
         authvals.UserId = PhotonNetwork.NickName;
@@ -30,6 +39,18 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         client.UseBackgroundWorkerForSending = true;
         Debug.Log("connecting to chat as: " + client.AuthValues.UserId);
         client.ConnectUsingSettings(appSettings);
+        inRoom = true;
+        chatActive = true;
+        chatPanel.SetActive(true);
+    }
+
+    public void DisableChat()
+    {
+        client.Unsubscribe(channelRoomNames);
+        inRoom = false;
+        chatActive = false;
+        chatPanel.SetActive(false);
+        Debug.Log("unsubscribing from chat");
     }
 
     public void SendChatMessage()
@@ -56,19 +77,19 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     private void Update()
     {
-        if (Input.GetKeyDown(onkey) && !chatActive)
+        if (Input.GetKeyDown(onkey) && !chatActive && inRoom)
         {
             chatPanel.SetActive(true);
             chatActive = true;
         }
 
-        if (Input.GetKeyDown(offkey) && chatActive)
+        if (Input.GetKeyDown(offkey) && chatActive && inRoom)
         {
             chatPanel.SetActive(false);
             chatActive = false;
         }
 
-        if (chatActive)
+        if (chatActive && inRoom)
         {
             client.Service();
             if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter))
@@ -91,7 +112,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnConnected()
     {
-        client.Subscribe(PhotonNetwork.CurrentRoom.Name);
+        client.Subscribe(channelRoomNames);
         Debug.Log("connected to photon chat: " + client.ChatRegion);
     }
 

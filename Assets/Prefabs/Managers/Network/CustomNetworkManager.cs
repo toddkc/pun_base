@@ -5,6 +5,10 @@ using UnityEngine;
 public class CustomNetworkManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] GameObject playerEntityPrefab = default;
+    [SerializeField] GameEvent joinRoomEvent = default;
+    [SerializeField] GameEvent leaveRoomEvent = default;
+    [SerializeField] GameEvent disconnectEvent = default;
+    [SerializeField] GameEvent connectEvent = default;
 
     public static CustomNetworkManager instance;
 
@@ -26,10 +30,11 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        PhotonNetwork.AutomaticallySyncScene = true;
+        //PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.ConnectUsingSettings();
     }
 
+    // create a new room with a specific name
     public void CreateRoom(string roomname)
     {
         joiningRandom = false;
@@ -38,6 +43,7 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom(roomname);
     }
 
+    // join a room with a specific name
     public void JoinRoom(string roomname)
     {
         joiningRandom = false;
@@ -46,6 +52,7 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRoom(roomname);
     }
 
+    // attempt to join any room or else create one
     public void CreateOrJoinRandomRoom()
     {
         counter = 0;
@@ -54,45 +61,32 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
         joiningRandom = true;
     }
 
+    // user-triggered leaving the current room
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
     }
 
+    // user-triggered PUN disconnect
     public void Disconnect()
     {
         PhotonNetwork.Disconnect();
     }
 
-    public void LoadGameScene()
-    {
-        PhotonNetwork.LoadLevel(1);
-    }
-
-    public void LoadMenuScene()
-    {
-        PhotonNetwork.LoadLevel(0);
-    }
-
-    //public void SpawnPlayerEntity(Player owner)
-    //{
-    //    if (!PhotonNetwork.IsMasterClient) return;
-    //    var entity = PhotonNetwork.Instantiate(playerEntityPrefab.name, Vector3.zero, Quaternion.identity);
-    //    entity.GetPhotonView().TransferOwnership(owner);
-    //}
 
     #region Callbacks
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("connected to master");
+        Debug.Log("connected to PUN");
+        connectEvent.Raise();
     }
 
     public override void OnLeftRoom()
     {
         Debug.Log("left room");
         AudioPlayer.PlayerLeft();
-        LoadMenuScene();
+        leaveRoomEvent.Raise();
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -104,6 +98,7 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         Debug.Log("disconnected from server");
+        disconnectEvent.Raise();
     }
 
     public override void OnCreatedRoom()
@@ -115,15 +110,13 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("joined room: " + PhotonNetwork.CurrentRoom.Name);
         AudioPlayer.PlayerJoined();
-        LoadGameScene();
-        //SpawnPlayerEntity(PhotonNetwork.LocalPlayer);
+        joinRoomEvent.Raise();
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Debug.Log(newPlayer.NickName + "has joined the room");
         AudioPlayer.PlayerJoined();
-        //SpawnPlayerEntity(newPlayer);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
