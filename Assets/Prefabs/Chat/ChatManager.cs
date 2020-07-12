@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class ChatManager : MonoBehaviour, IChatClientListener
 {
+    [SerializeField] bool printDebug = false;
     [SerializeField] InputField chatMessageInput = default;
     [SerializeField] Text messageDisplayText = default;
     [SerializeField] GameObject chatPanel = default;
@@ -34,7 +35,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         client.AuthValues = authvals;
         client.ChatRegion = "US";
         client.UseBackgroundWorkerForSending = true;
-        Debug.Log("connecting to chat as: " + client.AuthValues.UserId);
+        if (printDebug) Debug.Log("connecting to chat as: " + client.AuthValues.UserId);
         client.ConnectUsingSettings(appSettings);
         inRoom = true;
         chatActive = true;
@@ -47,7 +48,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         inRoom = false;
         chatActive = false;
         chatPanel.SetActive(false);
-        Debug.Log("unsubscribing from chat");
+        if (printDebug) Debug.Log("unsubscribing from chat");
     }
 
     public void SendChatMessage()
@@ -65,7 +66,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         bool found = client.TryGetChannel(channelName, out channel);
         if (!found)
         {
-            Debug.Log("failed to find channel: " + channelName);
+            if (printDebug) Debug.Log("failed to find channel: " + channelName);
             return;
         }
 
@@ -98,7 +99,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void DebugReturn(DebugLevel level, string message)
     {
-        Debug.Log("chat return");
+        if (printDebug) Debug.Log("chat return");
     }
 
     public void OnChatStateChange(ChatState state)
@@ -110,52 +111,52 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void OnConnected()
     {
         client.Subscribe(channelRoomNames);
-        Debug.Log("connected to photon chat: " + client.ChatRegion);
+        if (printDebug) Debug.Log("connected to photon chat: " + client.ChatRegion);
     }
 
     public void OnDisconnected()
     {
-        Debug.Log("disconnected from photon chat");
+        if (printDebug) Debug.Log("disconnected from photon chat");
     }
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
-        Debug.Log("chat message received");
+        if (printDebug) Debug.Log("chat message received");
         UpdateMessages(channelName);
     }
 
     public void OnPrivateMessage(string sender, object message, string channelName)
     {
-        Debug.Log("private chat message received");
+        if (printDebug) Debug.Log("private chat message received");
         UpdateMessages(channelName);
     }
 
     public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
     {
-        Debug.Log("status updated");
+        if (printDebug) Debug.Log("status updated");
     }
 
     public void OnSubscribed(string[] channels, bool[] results)
     {
-        Debug.Log("photon chat subscribed: " + channels[0] + ", channels: " + channels.Length);
+        if (printDebug) Debug.Log("photon chat subscribed: " + channels[0] + ", channels: " + channels.Length);
         client.PublishMessage(PhotonNetwork.CurrentRoom.Name, PhotonNetwork.NickName + " has joined");
     }
 
     public void OnUnsubscribed(string[] channels)
     {
-        Debug.Log("photon chat unsubscribed, channels: " + channels.Length);
+        if (printDebug) Debug.Log("photon chat unsubscribed, channels: " + channels.Length);
         client.PublishMessage(PhotonNetwork.CurrentRoom.Name, PhotonNetwork.NickName + " has left");
     }
 
     public void OnUserSubscribed(string channel, string user)
     {
-        Debug.Log(user + " joined " + channel);
+        if (printDebug) Debug.Log(user + " joined " + channel);
         client.PublishMessage(PhotonNetwork.CurrentRoom.Name, user + " has joined " + channel);
     }
 
     public void OnUserUnsubscribed(string channel, string user)
     {
-        Debug.Log(user + " left " + channel);
+        if (printDebug) Debug.Log(user + " left " + channel);
         client.PublishMessage(PhotonNetwork.CurrentRoom.Name, user + " has left " + channel);
     }
 }

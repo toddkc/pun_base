@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 432530f072ec07a4d96584fa87494d31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  printDebug: 0
   chatMessageInput: {fileID: 7708869548438092389}
   messageDisplayText: {fileID: 7708869548618705380}
   chatPanel: {fileID: 7708869548752357095}
@@ -1493,11 +1494,11 @@ RectTransform:
   m_Father: {fileID: 3944810574133934096}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 525, y: 350}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_SizeDelta: {x: 530, y: 350}
+  m_Pivot: {x: 0, y: 0}
 --- !u!222 &7708869548752357088
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1519,7 +1520,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
+  m_Color: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 0.5803922}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:

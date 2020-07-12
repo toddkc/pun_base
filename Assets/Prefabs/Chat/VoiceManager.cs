@@ -3,26 +3,28 @@ using Photon.Realtime;
 using Photon.Voice.Unity;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class VoiceManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingCallbacks
 {
     private VoiceConnection voiceConnection;
 
     [SerializeField]
-    private bool usePhotonRoom = true;
+    private bool enableVoice = false;
     [SerializeField]
-    private string roomName;
-
-    private readonly EnterRoomParams enterRoomParams = new EnterRoomParams
-    {
-        RoomOptions = new RoomOptions()
-    };
+    private bool printDebug = false;
+    [SerializeField]
+    private GameEvent connectedEvent = default;
+    [SerializeField]
+    private Text roomName = default;
 
     public bool IsConnected { get { return voiceConnection.Client.IsConnected; } }
 
     private void Awake()
     {
         voiceConnection = GetComponent<VoiceConnection>();
+        voiceConnection.Settings.AppVersion = PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion;
+        voiceConnection.Settings.AppIdVoice = PhotonNetwork.PhotonServerSettings.AppSettings.AppIdVoice;
     }
 
     private void Start()
@@ -39,22 +41,68 @@ public class VoiceManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingCal
         voiceConnection.Client.RemoveCallbackTarget(this);
     }
 
+    //private void Update()
+    //{
+    //    if (printDebug) GetPlayers();
+    //}
+
+    private void GetPlayers()
+    {
+        if (!voiceConnection.Client.InRoom) return;
+        string players = "players in voice room: ";
+        foreach (var player in voiceConnection.Client.CurrentRoom.Players)
+        {
+            players += " || " + player.Value.NickName + " || ";
+        }
+        Debug.Log(players);
+    }
+
     public void JoinVoiceRoom()
     {
-        //enterRoomParams.RoomName = roomName;
-        enterRoomParams.RoomName = PhotonNetwork.CurrentRoom.Name + "_voice";
-        Debug.Log(enterRoomParams.RoomName);
-        voiceConnection.Client.OpJoinOrCreateRoom(enterRoomParams);
-        voiceConnection.PrimaryRecorder.TransmitEnabled = true;
+        if (!enableVoice) return;
+        voiceConnection.Client.NickName = PhotonNetwork.NickName;
+        string room = PhotonNetwork.CurrentRoom.Name + "_voice";
+        var roomParams = new EnterRoomParams
+        {
+            RoomName = room
+        };
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            voiceConnection.Client.OpCreateRoom(roomParams);
+        }
+        else
+        {
+            voiceConnection.Client.OpJoinRoom(roomParams);
+        }
     }
     public void LeaveVoiceRoom()
     {
-        voiceConnection.Client.OpLeaveRoom(false);
+        if (voiceConnection.Client.InRoom)
+        {
+            voiceConnection.Client.OpLeaveRoom(false);
+        }
     }
 
-    public void OnConnectedToMaster(){}
-    public void OnJoinedRoom(){}
-    public void OnLeftRoom(){}
+    public void OnConnectedToMaster()
+    {
+        if (printDebug) Debug.Log("voice connected to server");
+        connectedEvent.Raise();
+    }
+
+    public void OnJoinedRoom()
+    {
+        voiceConnection.PrimaryRecorder.TransmitEnabled = true;
+        roomName.text = voiceConnection.Client.CurrentRoom.Name;
+        if (printDebug) Debug.Log("voice room joined: " + voiceConnection.Client.CurrentRoom.Name);
+    }
+
+    public void OnLeftRoom()
+    {
+        voiceConnection.PrimaryRecorder.TransmitEnabled = false;
+        roomName.text = "";
+    }
+
     public void OnCreatedRoom() { }
     public void OnCreateRoomFailed(short returnCode, string message) { }
     public void OnFriendListUpdate(List<FriendInfo> friendList) { }

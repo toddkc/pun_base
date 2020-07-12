@@ -1,9 +1,13 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CustomNetworkManager : MonoBehaviourPunCallbacks
 {
+    [SerializeField] Text roomName = default;
+    [SerializeField] bool printDebug = false;
+    [SerializeField] bool spawnPlayerEntity = false;
     [SerializeField] GameObject playerEntityPrefab = default;
     [SerializeField] GameEvent joinRoomEvent = default;
     [SerializeField] GameEvent leaveRoomEvent = default;
@@ -17,10 +21,9 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -30,7 +33,6 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        //PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.ConnectUsingSettings();
     }
 
@@ -73,71 +75,74 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.Disconnect();
     }
 
-    public void SpawnPlayer(Player player)
+    private void SpawnPlayer(Player player)
     {
-        //if (!PhotonNetwork.IsMasterClient) return;
-        var entity = PhotonNetwork.Instantiate(playerEntityPrefab.name, Vector3.zero, Quaternion.identity);
-        //entity.GetPhotonView().TransferOwnership(player);
+        PhotonNetwork.Instantiate(playerEntityPrefab.name, Vector3.zero, Quaternion.identity);
     }
-
-    #region Callbacks
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("connected to PUN");
+        if (printDebug) Debug.Log("connected to PUN");
         connectEvent.Raise();
     }
 
     public override void OnLeftRoom()
     {
-        Debug.Log("left room");
-        AudioPlayer.PlayerLeft();
+        if (printDebug) Debug.Log("left room");
+        roomName.text = "";
         leaveRoomEvent.Raise();
-
-        // TODO handle destroying of player
+        CustomPlayerProperties.ResetProps(PhotonNetwork.LocalPlayer);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.Log(otherPlayer.NickName + " has left the room");
-        AudioPlayer.PlayerLeft();
-
-        // TODO handle destroying of other players?
+        if (printDebug) Debug.Log(otherPlayer.NickName + " has left the room");
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        Debug.Log("disconnected from server");
+        if (printDebug) Debug.Log("disconnected from server");
         disconnectEvent.Raise();
     }
 
     public override void OnCreatedRoom()
     {
-        Debug.Log("created room: " + PhotonNetwork.CurrentRoom.Name);
+        if (printDebug) Debug.Log("created room: " + PhotonNetwork.CurrentRoom.Name);
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        if (printDebug) Debug.Log("create room failed: " + message);
+        ErrorMessageDisplay.instance.DisplayMessage("create room failed: " + message);
     }
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("joined room: " + PhotonNetwork.CurrentRoom.Name);
-        AudioPlayer.PlayerJoined();
+        roomName.text = PhotonNetwork.CurrentRoom.Name;
+        if (printDebug) Debug.Log("joined room: " + PhotonNetwork.CurrentRoom.Name);
         joinRoomEvent.Raise();
+        CustomPlayerProperties.ResetProps(PhotonNetwork.LocalPlayer);
 
-        // TODO handle instantiate player
-        SpawnPlayer(PhotonNetwork.LocalPlayer);
+        if (spawnPlayerEntity)
+        {
+            SpawnPlayer(PhotonNetwork.LocalPlayer);
+        }
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Debug.Log(newPlayer.NickName + "has joined the room");
-        AudioPlayer.PlayerJoined();
+        if (printDebug) Debug.Log(newPlayer.NickName + "has joined the room");
+    }
 
-        // TODO handle instantiate other player
-        //SpawnPlayer(newPlayer);
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        if (printDebug) Debug.Log("join room failed: " + message);
+        ErrorMessageDisplay.instance.DisplayMessage("join room failed: " + message);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Debug.Log("join random failed");
+        if (printDebug) Debug.Log("join random failed");
         if (joiningRandom)
         {
             if (counter < 10)
@@ -152,6 +157,4 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
             }
         }
     }
-
-    #endregion
 }
