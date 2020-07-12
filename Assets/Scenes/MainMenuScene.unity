@@ -339,11 +339,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1858348004}
-  - component: {fileID: 1858348005}
-  - component: {fileID: 1858348009}
   - component: {fileID: 1858348008}
   - component: {fileID: 1858348007}
   - component: {fileID: 1858348006}
+  - component: {fileID: 1858348009}
+  - component: {fileID: 1858348005}
   m_Layer: 0
   m_Name: PhotonVoice
   m_TagString: Untagged
@@ -377,7 +377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91175dcc15224463780e01a8a98b1b60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logLevel: 3
+  logLevel: 1
   ignoreGlobalLogLevel: 0
   voiceDetection: 0
   voiceDetectionThreshold: 0.01
@@ -419,7 +419,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1858348008}
-        m_MethodName: DisableVoiceChat
+        m_MethodName: LeaveVoiceRoom
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -446,7 +446,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1858348008}
-        m_MethodName: EnableVoiceChat
+        m_MethodName: JoinVoiceRoom
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -468,6 +468,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e4dba0d96248ad448ef261abea204de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  usePhotonRoom: 1
+  roomName: toddtest
 --- !u!114 &1858348009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,7 +482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 697c1cda529a1419782f2a2e3afe37a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  KeepAliveInBackground: 60000
+  KeepAliveInBackground: 5000
   ApplyDontDestroyOnLoad: 0
   logLevel: 1
   enableSupportLogger: 0
@@ -496,7 +498,7 @@ MonoBehaviour:
     AppIdRealtime: 
     AppIdChat: 
     AppIdVoice: fca37e12-1dd5-4a6f-867e-68a6c1a6ffa2
-    AppVersion: 0.1
+    AppVersion: 1
     UseNameServer: 1
     FixedRegion: 
     Server: 
