@@ -2,7 +2,6 @@
 using Photon.Chat;
 using ExitGames.Client.Photon;
 using Photon.Pun;
-using System.Collections;
 using UnityEngine.UI;
 
 public class ChatManager : MonoBehaviour, IChatClientListener

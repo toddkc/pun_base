@@ -32,11 +32,11 @@ public class AudioPlayer : MonoBehaviour
 
     public static void PlayerJoined()
     {
-        if (instance.playerJoinedRoom) PlaySound(instance.playerJoinedRoom);
+        if (instance && instance.playerJoinedRoom) PlaySound(instance.playerJoinedRoom);
     }
 
     public static void PlayerLeft()
     {
-        if (instance.playerLeftRoom) PlaySound(instance.playerLeftRoom);
+        if (instance && instance.playerLeftRoom) PlaySound(instance.playerLeftRoom);
     }
 }
