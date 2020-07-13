@@ -3,92 +3,102 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneLoader : MonoBehaviour
+namespace TestScripts
 {
-    [SerializeField] private int sceneToLoad = default;
-    [SerializeField] private GameObject loadScenePanel = default;
-    [SerializeField] private GameEvent sceneLoadedEvent = default;
-    [SerializeField] private GameEvent sceneUnloadedEvent = default;
-
-    private bool isSceneLoaded = false;
-
-    private void Start()
+    public class SceneLoader : MonoBehaviour
     {
-        loadScenePanel.SetActive(false);
-    }
 
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += SceneLoadedCallback;
-        SceneManager.sceneUnloaded += SceneUnloadedCallback;
-        PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
-    }
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= SceneLoadedCallback;
-        SceneManager.sceneUnloaded -= SceneUnloadedCallback;
-        PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
-    }
+        [SerializeField] private GameEvent sceneLoadedEvent = default;
+        [SerializeField] private GameEvent sceneUnloadedEvent = default;
+        private bool isSceneLoaded = false;
+        private int? currentGameScene = null;
 
-    public void ShowGamePanel(bool active)
-    {
-        if (PhotonNetwork.IsMasterClient)
+        private void OnEnable()
         {
-            loadScenePanel.SetActive(active);
+            SceneManager.sceneLoaded += SceneLoadedCallback;
+            SceneManager.sceneUnloaded += SceneUnloadedCallback;
+            PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
         }
-    }
-
-    private void SceneLoadedCallback(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.buildIndex == sceneToLoad)
+        private void OnDisable()
         {
-            sceneLoadedEvent.Raise();
-            CustomPlayerProperties.UpdateProps<int>(PhotonNetwork.LocalPlayer, "loaded_scene", scene.buildIndex);
+            SceneManager.sceneLoaded -= SceneLoadedCallback;
+            SceneManager.sceneUnloaded -= SceneUnloadedCallback;
+            PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
         }
-    }
 
-    private void SceneUnloadedCallback(Scene scene)
-    {
-        if (scene.buildIndex == sceneToLoad)
+        public void LeaveRoom()
         {
-            sceneUnloadedEvent.Raise();
-            isSceneLoaded = false;
+            Debug.Log("leave room");
+            UnloadGameSceneEventResponse();
         }
-    }
 
-    public void LoadGameScene(int scene)
-    {
-        if (!isSceneLoaded && PhotonNetwork.IsMasterClient)
+        private void SceneLoadedCallback(Scene scene, LoadSceneMode mode)
         {
-            PUN_Events.LoadLevelEvent(scene);
+            if (scene.buildIndex == currentGameScene)
+            {
+                sceneLoadedEvent.Raise();
+                CustomPlayerProperties.UpdateProps<int>(PhotonNetwork.LocalPlayer, "loaded_scene", scene.buildIndex);
+            }
         }
-    }
 
-    private void OnEvent(EventData photonEvent)
-    {
-        byte eventCode = photonEvent.Code;
-        if (eventCode == PUN_Events.LoadLevelEventCode)
+        private void SceneUnloadedCallback(Scene scene)
         {
-            object[] data = (object[])photonEvent.CustomData;
-            int buildIndex = (int)data[0];
-            LoadGameSceneEventResponse(buildIndex);
+            if (scene.buildIndex == currentGameScene)
+            {
+                sceneUnloadedEvent.Raise();
+                isSceneLoaded = false;
+                currentGameScene = null;
+            }
         }
-    }
 
-    private void LoadGameSceneEventResponse(int index)
-    {
-        if (!isSceneLoaded)
+        public void LoadGameScene(int scene)
         {
-            isSceneLoaded = true;
-            SceneManager.LoadSceneAsync(index, LoadSceneMode.Additive);
+            if (!isSceneLoaded && PhotonNetwork.IsMasterClient)
+            {
+                PUN_Events.LoadLevelEvent(scene);
+            }
         }
-    }
 
-    public void UnloadGameScene()
-    {
-        if (isSceneLoaded)
+        public void UnloadGameScene()
         {
-            SceneManager.UnloadSceneAsync(sceneToLoad);
+            if (isSceneLoaded && PhotonNetwork.IsMasterClient)
+            {
+                PUN_Events.UnloadLevelEvent();
+            }
+        }
+
+        private void OnEvent(EventData photonEvent)
+        {
+            byte eventCode = photonEvent.Code;
+            if (eventCode == PUN_Events.LoadLevelEventCode)
+            {
+                object[] data = (object[])photonEvent.CustomData;
+                int buildIndex = (int)data[0];
+                LoadGameSceneEventResponse(buildIndex);
+            }
+            else if (eventCode == PUN_Events.UnloadLevelEventCode)
+            {
+                UnloadGameSceneEventResponse();
+            }
+        }
+
+        private void LoadGameSceneEventResponse(int index)
+        {
+            if (!isSceneLoaded)
+            {
+                isSceneLoaded = true;
+                currentGameScene = index;
+                SceneManager.LoadSceneAsync(index, LoadSceneMode.Additive);
+                ErrorMessageDisplay.instance.DisplayMessage("Loading Game...");
+            }
+        }
+
+        private void UnloadGameSceneEventResponse()
+        {
+            if (isSceneLoaded && currentGameScene != null)
+            {
+                SceneManager.UnloadSceneAsync((int)currentGameScene);
+            }
         }
     }
 }

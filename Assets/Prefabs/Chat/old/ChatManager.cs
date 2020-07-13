@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class ChatManager : MonoBehaviour, IChatClientListener
 {
+    // TODO:
+    // separate manager from ui
+
     [SerializeField] bool printDebug = false;
     [SerializeField] InputField chatMessageInput = default;
     [SerializeField] Text messageDisplayText = default;
@@ -75,16 +78,21 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     private void Update()
     {
-        if (Input.GetKeyDown(onkey) && !chatActive && inRoom)
+        if (Input.GetKeyDown(onkey) && inRoom)
         {
-            chatPanel.SetActive(true);
-            chatActive = true;
-        }
-
-        if (Input.GetKeyDown(offkey) && chatActive && inRoom)
-        {
-            chatPanel.SetActive(false);
-            chatActive = false;
+            if (chatActive)
+            {
+                if (!chatMessageInput.isFocused)
+                {
+                    chatPanel.SetActive(false);
+                    chatActive = false;
+                }
+            }
+            else
+            {
+                chatPanel.SetActive(true);
+                chatActive = true;
+            }
         }
 
         if (chatActive && inRoom)
@@ -104,8 +112,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnChatStateChange(ChatState state)
     {
-        // do nothing
-        return;
     }
 
     public void OnConnected()

@@ -879,7 +879,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Chat - Press T to open, Press Esc to close
+  m_Text: Chat - Press T to toggle
 --- !u!114 &7708869548389808757
 MonoBehaviour:
   m_ObjectHideFlags: 0
