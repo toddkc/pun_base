@@ -1,11 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ErrorMessageDisplay : MonoBehaviour
+public class UIMessageDisplay : MonoBehaviour
 {
-    public static ErrorMessageDisplay instance;
+    public static UIMessageDisplay instance;
     [SerializeField] GameObject panel;
     [SerializeField] Text messageText;
     [SerializeField] float messageDelay;

@@ -113,7 +113,7 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         if (printDebug) Debug.Log("create room failed: " + message);
-        ErrorMessageDisplay.instance.DisplayMessage("create room failed: " + message);
+        UIMessageDisplay.instance.DisplayMessage("create room failed: " + message);
     }
 
     public override void OnJoinedRoom()
@@ -137,7 +137,7 @@ public class CustomNetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         if (printDebug) Debug.Log("join room failed: " + message);
-        ErrorMessageDisplay.instance.DisplayMessage("join room failed: " + message);
+        UIMessageDisplay.instance.DisplayMessage("join room failed: " + message);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)

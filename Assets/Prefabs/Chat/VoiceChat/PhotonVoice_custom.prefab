@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 1879573166}
   - component: {fileID: 1879573165}
   m_Layer: 0
-  m_Name: Panel
+  m_Name: Panel-VoiceRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

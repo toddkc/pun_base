@@ -89,7 +89,7 @@ namespace TestScripts
                 isSceneLoaded = true;
                 currentGameScene = index;
                 SceneManager.LoadSceneAsync(index, LoadSceneMode.Additive);
-                ErrorMessageDisplay.instance.DisplayMessage("Loading Game...");
+                UIMessageDisplay.instance.DisplayMessage("Loading Game...");
             }
         }
 

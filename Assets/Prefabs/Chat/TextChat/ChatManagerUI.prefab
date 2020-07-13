@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1903160922349144411}
   - component: {fileID: 1903160922349144412}
   m_Layer: 5
-  m_Name: ChatOutput Panel
+  m_Name: Panel-Output
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -471,7 +471,7 @@ GameObject:
   - component: {fileID: 1903160923055366460}
   - component: {fileID: 1903160923055366461}
   m_Layer: 5
-  m_Name: InputBar Panel
+  m_Name: Panel-Input
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -645,6 +645,7 @@ GameObject:
   - component: {fileID: 1903160923225970626}
   - component: {fileID: 1903160923225970627}
   - component: {fileID: 1903160923225970686}
+  - component: {fileID: 1201315426}
   m_Layer: 5
   m_Name: ChatManagerUI
   m_TagString: Untagged
@@ -776,6 +777,44 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &1201315426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1903160923225970628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfe329a9c2c8f4a40937bd0ee6119ca8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 735bfe5cac8e19c409f8b0d48f66a919, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1903160923565156679}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1903160924360077958}
+        m_MethodName: set_text
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1903160923291750002
 GameObject:
   m_ObjectHideFlags: 0
@@ -884,7 +923,7 @@ GameObject:
   - component: {fileID: 1903160923322752984}
   - component: {fileID: 1903160923322752982}
   m_Layer: 5
-  m_Name: InputField Regular
+  m_Name: InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1266,7 +1305,7 @@ GameObject:
   - component: {fileID: 1903160923565156677}
   - component: {fileID: 1903160923565156678}
   m_Layer: 5
-  m_Name: Chat Panel
+  m_Name: Panel-Chat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1438,7 +1477,7 @@ GameObject:
   - component: {fileID: 1903160923984436681}
   - component: {fileID: 1903160923984436682}
   m_Layer: 5
-  m_Name: Button Regular
+  m_Name: Button-Send
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1568,7 +1607,7 @@ GameObject:
   - component: {fileID: 1903160924360077958}
   - component: {fileID: 1903160924360077960}
   m_Layer: 5
-  m_Name: Selected Channel Text
+  m_Name: Text-Message
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

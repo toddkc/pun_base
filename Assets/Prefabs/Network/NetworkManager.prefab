@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 757885593}
   - component: {fileID: 757885592}
   m_Layer: 0
-  m_Name: Panel
+  m_Name: Panel-PUNRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

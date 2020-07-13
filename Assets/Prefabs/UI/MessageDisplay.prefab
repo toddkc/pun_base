@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 4189497382484299386}
   - component: {fileID: 4189497382484299381}
   m_Layer: 0
-  m_Name: ErrorMessage
+  m_Name: MessageDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 4189497383517241213}
   - component: {fileID: 4189497383517240962}
   m_Layer: 0
-  m_Name: Panel
+  m_Name: Panel-MessageDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
