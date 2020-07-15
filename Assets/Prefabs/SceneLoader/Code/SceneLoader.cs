@@ -1,10 +1,11 @@
-﻿using ExitGames.Client.Photon;
-using Photon.Pun;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
-namespace TestScripts
+﻿namespace NetworkTutorial
 {
+    using ExitGames.Client.Photon;
+    using NetworkTutorial.GameEvents;
+    using Photon.Pun;
+    using UnityEngine;
+    using UnityEngine.SceneManagement;
+
     public class SceneLoader : MonoBehaviour
     {
 

@@ -1,30 +1,29 @@
-﻿///
-/// This code taken from https://www.raywenderlich.com/2826197-scriptableobject-tutorial-getting-started
-///
-
-using System.Collections.Generic;
-using UnityEngine;
-
-[CreateAssetMenu(fileName = "GameEvent", menuName = "GameEvent")]
-public class GameEvent : ScriptableObject
+﻿namespace NetworkTutorial.GameEvents
 {
-    private List<GameEventListener> listeners = new List<GameEventListener>();
+    using UnityEngine;
+    using System.Collections.Generic;
 
-    public void Raise()
+    [CreateAssetMenu(fileName = "GameEvent", menuName = "GameEvent")]
+    public class GameEvent : ScriptableObject
     {
-        for (int i = listeners.Count - 1; i >= 0; i--)
+        private List<GameEventListener> listeners = new List<GameEventListener>();
+
+        public void Raise()
         {
-            listeners[i].OnEventRaised();
+            for (int i = listeners.Count - 1; i >= 0; i--)
+            {
+                listeners[i].OnEventRaised();
+            }
         }
-    }
 
-    public void RegisterListener(GameEventListener listener)
-    {
-        listeners.Add(listener);
-    }
+        public void AddListener(GameEventListener listener)
+        {
+            listeners.Add(listener);
+        }
 
-    public void UnregisterListener(GameEventListener listener)
-    {
-        listeners.Remove(listener);
+        public void RemoveListener(GameEventListener listener)
+        {
+            listeners.Remove(listener);
+        }
     }
 }

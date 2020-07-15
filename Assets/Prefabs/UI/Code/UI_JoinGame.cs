@@ -1,14 +1,20 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-
-public class UI_JoinGame : MonoBehaviour
+﻿namespace NetworkTutorial
 {
-    [SerializeField] InputField roomNameInput = default;
+    using NetworkTutorial.GameEvents;
+    using UnityEngine;
+    using UnityEngine.UI;
 
-    public void JoinGame()
+    public class UI_JoinGame : MonoBehaviour
     {
-        string roomname = roomNameInput.text;
-        if (string.IsNullOrEmpty(roomname)) return;
-        CustomNetworkManager.instance.JoinRoom(roomname);
+        [SerializeField] InputField roomNameInput = default;
+        [SerializeField] GameEvent joinRoomEvent = default;
+
+        public void JoinGame()
+        {
+            string roomname = roomNameInput.text;
+            if (string.IsNullOrEmpty(roomname)) return;
+            joinRoomEvent.Raise();
+            CustomNetworkManager.instance.JoinRoom(roomname);
+        }
     }
 }

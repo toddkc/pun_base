@@ -1,9 +1,16 @@
-﻿using UnityEngine;
-
-public class UI_RandomGame : MonoBehaviour
+﻿namespace NetworkTutorial
 {
-    public void RandomGame()
+    using NetworkTutorial.GameEvents;
+    using UnityEngine;
+
+    public class UI_RandomGame : MonoBehaviour
     {
-        CustomNetworkManager.instance.CreateOrJoinRandomRoom();
+        [SerializeField] GameEvent joinRandomEvent = default;
+
+        public void RandomGame()
+        {
+            joinRandomEvent.Raise();
+            CustomNetworkManager.instance.CreateOrJoinRandomRoom();
+        }
     }
 }

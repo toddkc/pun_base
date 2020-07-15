@@ -1,42 +1,46 @@
-﻿using Photon.Pun;
-using System.Collections;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
-public class SceneLoadedCheck : MonoBehaviour
+﻿namespace NetworkTutorial
 {
-    [SerializeField] GameEvent allPlayersInSceneEvent = default;
-    private bool allPlayersLoaded = false;
+    using Photon.Pun;
+    using NetworkTutorial.GameEvents;
+    using System.Collections;
+    using UnityEngine;
+    using UnityEngine.SceneManagement;
 
-    private void Start()
+    public class SceneLoadedCheck : MonoBehaviour
     {
-        if (!PhotonNetwork.IsMasterClient) return;
-        var playersInRoom = PhotonNetwork.CurrentRoom.Players;
-        var scene = SceneManager.GetActiveScene().buildIndex;
-        StartCoroutine(VerifySceneLoad(scene));
-    }
+        [SerializeField] GameEvent allPlayersInSceneEvent = default;
+        private bool allPlayersLoaded = false;
 
-    private IEnumerator VerifySceneLoad(int index)
-    {
-        while (!allPlayersLoaded)
+        private void Start()
         {
+            if (!PhotonNetwork.IsMasterClient) return;
             var playersInRoom = PhotonNetwork.CurrentRoom.Players;
-            bool loaded = true;
-            foreach(var player in playersInRoom)
-            {
-                Debug.Log(player.Value.NickName + " has loaded scene: " + player.Value.CustomProperties.ContainsKey("loaded_scene"));
-                if (!player.Value.CustomProperties.ContainsKey("loaded_scene"))
-                {
-                    loaded = false;
-                }
-            }
-            if (loaded)
-            {
-                allPlayersLoaded = true;
-            }
-            yield return null;
+            var scene = SceneManager.GetActiveScene().buildIndex;
+            StartCoroutine(VerifySceneLoad(scene));
         }
-        Debug.Log("all players loaded scene");
-        allPlayersInSceneEvent.Raise();
+
+        private IEnumerator VerifySceneLoad(int index)
+        {
+            while (!allPlayersLoaded)
+            {
+                var playersInRoom = PhotonNetwork.CurrentRoom.Players;
+                bool loaded = true;
+                foreach (var player in playersInRoom)
+                {
+                    Debug.Log(player.Value.NickName + " has loaded scene: " + player.Value.CustomProperties.ContainsKey("loaded_scene"));
+                    if (!player.Value.CustomProperties.ContainsKey("loaded_scene"))
+                    {
+                        loaded = false;
+                    }
+                }
+                if (loaded)
+                {
+                    allPlayersLoaded = true;
+                }
+                yield return null;
+            }
+            Debug.Log("all players loaded scene");
+            allPlayersInSceneEvent.Raise();
+        }
     }
 }

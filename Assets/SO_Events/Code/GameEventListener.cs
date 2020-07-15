@@ -1,29 +1,26 @@
-﻿///
-/// This code taken from https://www.raywenderlich.com/2826197-scriptableobject-tutorial-getting-started
-///
-
-using UnityEngine;
-using UnityEngine.Events;
-
-public class GameEventListener : MonoBehaviour
+﻿namespace NetworkTutorial.GameEvents
 {
-    [SerializeField]
-    private GameEvent gameEvent;
-    [SerializeField]
-    private UnityEvent response;
+    using UnityEngine;
+    using UnityEngine.Events;
 
-    private void OnEnable()
+    public class GameEventListener : MonoBehaviour
     {
-        gameEvent.RegisterListener(this);
-    }
+        [SerializeField] private GameEvent gameEvent;
+        [SerializeField] private UnityEvent responseEvent;
 
-    private void OnDisable()
-    {
-        gameEvent.UnregisterListener(this);
-    }
+        private void OnEnable()
+        {
+            gameEvent.AddListener(this);
+        }
 
-    public void OnEventRaised()
-    {
-        response.Invoke();
+        private void OnDisable()
+        {
+            gameEvent.RemoveListener(this);
+        }
+
+        public void OnEventRaised()
+        {
+            responseEvent.Invoke();
+        }
     }
 }

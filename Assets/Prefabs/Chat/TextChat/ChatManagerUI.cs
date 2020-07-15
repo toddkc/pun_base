@@ -59,6 +59,7 @@ public class ChatManagerUI : MonoBehaviour
 
     public void DisableChat()
     {
+        chatMessageInput.text = "";
         chatPanel.SetActive(false);
     }
 
