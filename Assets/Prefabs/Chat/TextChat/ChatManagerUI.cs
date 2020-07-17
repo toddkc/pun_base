@@ -1,79 +1,82 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-
-public class ChatManagerUI : MonoBehaviour
+﻿namespace NetworkTutorial
 {
-    [SerializeField] InputField chatMessageInput = default;
-    [SerializeField] Text messageDisplayText = default;
-    [SerializeField] GameObject chatPanel = default;
-    [SerializeField] KeyCode toggleKey = default;
-    [SerializeField] TestScripts.ChatManager chat;
+    using UnityEngine;
+    using UnityEngine.UI;
 
-    private void Start()
+    public class ChatManagerUI : MonoBehaviour
     {
-        chatPanel.SetActive(false);
-    }
+        [SerializeField] InputField chatMessageInput = default;
+        [SerializeField] Text messageDisplayText = default;
+        [SerializeField] GameObject chatPanel = default;
+        [SerializeField] KeyCode toggleKey = default;
+        [SerializeField] ChatManager chat;
 
-    private void OnEnable()
-    {
-        chat.OnUpdateMessages += UpdateMessages;
-    }
-
-    private void OnDisable()
-    {
-        chat.OnUpdateMessages -= UpdateMessages;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(toggleKey) && chat.InRoom)
+        private void Start()
         {
-            if (chat.ChatActive)
+            chatPanel.SetActive(false);
+        }
+
+        private void OnEnable()
+        {
+            chat.OnUpdateMessages += UpdateMessages;
+        }
+
+        private void OnDisable()
+        {
+            chat.OnUpdateMessages -= UpdateMessages;
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(toggleKey) && chat.InRoom)
             {
-                if (!chatMessageInput.isFocused)
+                if (chat.ChatActive)
                 {
-                    chatPanel.SetActive(false);
-                    chat.ChatActive = false;
+                    if (!chatMessageInput.isFocused)
+                    {
+                        chatPanel.SetActive(false);
+                        chat.ChatActive = false;
+                    }
+                }
+                else
+                {
+                    chatPanel.SetActive(true);
+                    chat.ChatActive = true;
                 }
             }
-            else
+
+            if (chat.ChatActive && chat.InRoom)
             {
-                chatPanel.SetActive(true);
-                chat.ChatActive = true;
+                if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter))
+                {
+                    SendChatMessage();
+                }
             }
         }
 
-        if (chat.ChatActive && chat.InRoom)
+        public void EnableChat()
         {
-            if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter))
-            {
-                SendChatMessage();
-            }
+            chatPanel.SetActive(true);
         }
-    }
 
-    public void EnableChat()
-    {
-        chatPanel.SetActive(true);
-    }
+        public void DisableChat()
+        {
+            chatMessageInput.text = "";
+            chatPanel.SetActive(false);
+        }
 
-    public void DisableChat()
-    {
-        chatMessageInput.text = "";
-        chatPanel.SetActive(false);
-    }
+        public void SendChatMessage()
+        {
+            string message = chatMessageInput.text;
+            if (string.IsNullOrEmpty(message)) return;
+            chatMessageInput.text = "";
+            chatMessageInput.ActivateInputField();
+            chat.SendChatMessage(message);
+        }
 
-    public void SendChatMessage()
-    {
-        string message = chatMessageInput.text;
-        if (string.IsNullOrEmpty(message)) return;
-        chatMessageInput.text = "";
-        chatMessageInput.ActivateInputField();
-        chat.SendChatMessage(message);
-    }
-
-    private void UpdateMessages(string messages)
-    {
-        messageDisplayText.text = messages;
+        private void UpdateMessages(string messages)
+        {
+            messageDisplayText.text = messages;
+        }
     }
 }

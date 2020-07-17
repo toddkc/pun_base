@@ -1,13 +1,11 @@
-﻿using ExitGames.Client.Photon;
-using Photon.Chat;
-using Photon.Pun;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace TestScripts
+﻿namespace NetworkTutorial
 {
+    using ExitGames.Client.Photon;
+    using Photon.Chat;
+    using Photon.Pun;
+    using System;
+    using UnityEngine;
+
     public class ChatManager : MonoBehaviour, IChatClientListener
     {
         [SerializeField] bool printDebug = false;
