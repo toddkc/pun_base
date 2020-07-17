@@ -88,6 +88,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4189497382484299386}
   - component: {fileID: 4189497382484299381}
+  - component: {fileID: 2063521325}
   m_Layer: 0
   m_Name: MessageDisplay
   m_TagString: Untagged
@@ -125,6 +126,33 @@ MonoBehaviour:
   panel: {fileID: 4189497383517240960}
   messageText: {fileID: 4189497382160806487}
   messageDelay: 3
+--- !u!114 &2063521325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4189497382484299387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfe329a9c2c8f4a40937bd0ee6119ca8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: a47d254afd931f943accbae0ecd51db6, type: 2}
+  responseEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4189497382484299381}
+        m_MethodName: DisplayMessage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4189497383517240960
 GameObject:
   m_ObjectHideFlags: 0
