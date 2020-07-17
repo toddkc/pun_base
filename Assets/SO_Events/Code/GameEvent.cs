@@ -2,6 +2,7 @@
 {
     using UnityEngine;
     using System.Collections.Generic;
+    using NaughtyAttributes;
 
     [CreateAssetMenu(fileName = "GameEvent", menuName = "GameEvent")]
     public class GameEvent : ScriptableObject
@@ -24,6 +25,16 @@
         public void RemoveListener(GameEventListener listener)
         {
             listeners.Remove(listener);
+        }
+
+
+        [Button]
+        private void ListAllListeners()
+        {
+            foreach(var listener in listeners)
+            {
+                Debug.Log($"{name}: {listener.name}", listener);
+            }
         }
     }
 }

@@ -7,14 +7,19 @@
     public class UI_HostGame : MonoBehaviour
     {
         [SerializeField] InputField roomNameInput = default;
-        [SerializeField] GameEvent createRoomEvent = default;
 
-        public void HostGame()
+        private void OnEnable()
         {
-            string roomname = roomNameInput.text;
-            if (string.IsNullOrEmpty(roomname)) return;
-            createRoomEvent.Raise();
-            CustomNetworkManager.instance.CreateRoom(roomname);
+            roomNameInput.onValueChanged.AddListener(OnInputChanged);
+        }
+        private void OnDisable()
+        {
+            roomNameInput.onValueChanged.RemoveListener(OnInputChanged);
+        }
+
+        public void OnInputChanged(string text)
+        {
+            PlayerPrefs.SetString("hostroom", text);
         }
     }
 }

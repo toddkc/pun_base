@@ -8,7 +8,7 @@
 
     public class SceneLoader : MonoBehaviour
     {
-
+        [SerializeField] private GameEvent displayMessageEvent = default;
         [SerializeField] private GameEvent sceneLoadedEvent = default;
         [SerializeField] private GameEvent sceneUnloadedEvent = default;
         private bool isSceneLoaded = false;
@@ -90,7 +90,9 @@
                 isSceneLoaded = true;
                 currentGameScene = index;
                 SceneManager.LoadSceneAsync(index, LoadSceneMode.Additive);
-                UIMessageDisplay.instance.DisplayMessage("Loading Game...");
+                PlayerPrefs.SetString("message", "Loading Game...");
+                displayMessageEvent.Raise();
+                //UIMessageDisplay.instance.DisplayMessage("Loading Game...");
             }
         }
 

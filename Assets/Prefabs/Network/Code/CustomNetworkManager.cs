@@ -16,23 +16,10 @@
         [SerializeField] GameEvent leaveRoomEvent = default;
         [SerializeField] GameEvent disconnectEvent = default;
         [SerializeField] GameEvent connectEvent = default;
-
-        public static CustomNetworkManager instance;
+        [SerializeField] GameEvent displayMessageEvent = default;
 
         private int counter = 0;
         private bool joiningRandom = false;
-
-        private void Awake()
-        {
-            if (instance == null)
-            {
-                instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
 
         private void Start()
         {
@@ -40,19 +27,21 @@
         }
 
         // create a new room with a specific name
-        public void CreateRoom(string roomname)
+        public void CreateRoom()
         {
             joiningRandom = false;
             if (!PhotonNetwork.IsConnected) return;
+            string roomname = PlayerPrefs.GetString("hostroom");
             if (string.IsNullOrEmpty(roomname)) return;
             PhotonNetwork.CreateRoom(roomname);
         }
 
         // join a room with a specific name
-        public void JoinRoom(string roomname)
+        public void JoinRoom()
         {
             joiningRandom = false;
             if (!PhotonNetwork.IsConnected) return;
+            string roomname = PlayerPrefs.GetString("joinroom");
             if (string.IsNullOrEmpty(roomname)) return;
             PhotonNetwork.JoinRoom(roomname);
         }
@@ -116,7 +105,9 @@
         public override void OnCreateRoomFailed(short returnCode, string message)
         {
             if (printDebug) Debug.Log("create room failed: " + message);
-            UIMessageDisplay.instance.DisplayMessage("create room failed: " + message);
+            PlayerPrefs.SetString("message", "create room failed: " + message);
+            displayMessageEvent.Raise();
+            //UIMessageDisplay.instance.DisplayMessage("create room failed: " + message);
         }
 
         public override void OnJoinedRoom()
@@ -140,7 +131,9 @@
         public override void OnJoinRoomFailed(short returnCode, string message)
         {
             if (printDebug) Debug.Log("join room failed: " + message);
-            UIMessageDisplay.instance.DisplayMessage("join room failed: " + message);
+            PlayerPrefs.SetString("message", "join room failed: " + message);
+            displayMessageEvent.Raise();
+            //UIMessageDisplay.instance.DisplayMessage("join room failed: " + message);
         }
 
         public override void OnJoinRandomFailed(short returnCode, string message)

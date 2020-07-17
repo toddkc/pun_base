@@ -7,14 +7,19 @@
     public class UI_JoinGame : MonoBehaviour
     {
         [SerializeField] InputField roomNameInput = default;
-        [SerializeField] GameEvent joinRoomEvent = default;
 
-        public void JoinGame()
+        private void OnEnable()
         {
-            string roomname = roomNameInput.text;
-            if (string.IsNullOrEmpty(roomname)) return;
-            joinRoomEvent.Raise();
-            CustomNetworkManager.instance.JoinRoom(roomname);
+            roomNameInput.onValueChanged.AddListener(OnInputChanged);
+        }
+        private void OnDisable()
+        {
+            roomNameInput.onValueChanged.RemoveListener(OnInputChanged);
+        }
+
+        public void OnInputChanged(string text)
+        {
+            PlayerPrefs.SetString("joinroom", text);
         }
     }
 }

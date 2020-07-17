@@ -4,31 +4,26 @@ using UnityEngine.UI;
 
 public class UIMessageDisplay : MonoBehaviour
 {
-    public static UIMessageDisplay instance;
     [SerializeField] GameObject panel;
     [SerializeField] Text messageText;
     [SerializeField] float messageDelay;
     private WaitForSeconds delay;
 
-    private void Awake()
+    private void OnEnable()
     {
-        if(instance == null)
-        {
-            instance = this;
-            delay = new WaitForSeconds(messageDelay);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        delay = new WaitForSeconds(messageDelay);
     }
 
-    public void DisplayMessage(string message)
+    public void DisplayMessage()
     {
         StopAllCoroutines();
-        messageText.text = message;
-        panel.SetActive(true);
-        StartCoroutine(DelayHideMessage());
+        string message = PlayerPrefs.GetString("message");
+        if (!string.IsNullOrEmpty(message))
+        {
+            messageText.text = message;
+            panel.SetActive(true);
+            StartCoroutine(DelayHideMessage());
+        }
     }
 
     private IEnumerator DelayHideMessage()
