@@ -9,8 +9,9 @@ public class UIMessageDisplay : MonoBehaviour
     [SerializeField] float messageDelay;
     private WaitForSeconds delay;
 
-    private void OnEnable()
+    private void Start()
     {
+        PlayerPrefs.SetString("message", "test");
         delay = new WaitForSeconds(messageDelay);
     }
 

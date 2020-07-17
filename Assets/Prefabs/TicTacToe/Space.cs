@@ -9,6 +9,7 @@
         private Text buttonText;
         public int SpaceIndex { get; set; }
         public TicTacToeGame GameController { get; set; }
+        public string GetText { get { return buttonText.text; } }
 
         private void Awake()
         {

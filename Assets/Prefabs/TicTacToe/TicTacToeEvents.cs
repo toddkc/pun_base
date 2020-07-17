@@ -23,31 +23,12 @@
             byte eventCode = photonEvent.Code;
             if (eventCode == PUN_Events.StartGameEventCode)
             {
-                OnGameStart();
+                controller.OnStartGame();
             }
             else if (eventCode == PUN_Events.ResetGameEventCode)
             {
-                OnGameReset();
+                controller.OnResetGame();
             }
-            else if (eventCode == PUN_Events.StopGameEventCode)
-            {
-                OnGameStop();
-            }
-        }
-
-        private void OnGameStart()
-        {
-            controller.OnStartGame();
-        }
-
-        private void OnGameReset()
-        {
-            controller.OnResetGame();
-        }
-
-        private void OnGameStop()
-        {
-
         }
     }
 }
